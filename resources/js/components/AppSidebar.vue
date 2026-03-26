@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Tablets } from 'lucide-vue-next';
+import {
+    BookOpen,
+    FolderGit2,
+    LayoutGrid,
+    Tablets,
+    Factory,
+} from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -16,6 +22,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { index as dosageFormsIndex } from '@/routes/dosage-forms';
+import { index as manufacturerIndex } from '@/routes/manufacturers';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -28,6 +35,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dosage Forms',
         href: dosageFormsIndex(),
         icon: Tablets,
+    },
+    {
+        title: 'Manufacturers',
+        href: manufacturerIndex(),
+        icon: Factory,
     },
 ];
 
