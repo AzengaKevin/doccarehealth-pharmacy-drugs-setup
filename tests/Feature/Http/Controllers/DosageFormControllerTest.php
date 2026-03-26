@@ -72,4 +72,19 @@ class DosageFormControllerTest extends TestCase
             'name' => data_get($payload, 'name'),
         ]);
     }
+
+    public function test_dosage_forms_destroy_route(): void
+    {
+        $form = DosageForm::factory()->create();
+
+        $response = $this->actingAs($this->user)->delete(route('dosage-forms.destroy', $form));
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect(route('dosage-forms.index'));
+
+        $this->assertSoftDeleted(DosageForm::class, [
+            'id' => $form->id,
+        ]);
+    }
 }

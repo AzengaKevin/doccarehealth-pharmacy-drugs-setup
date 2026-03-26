@@ -35,4 +35,9 @@ class DosageFormService
 
         return $dosageForm->update($attributes);
     }
+
+    public function delete(DosageForm $dosageForm): ?bool
+    {
+        return $dosageForm->delete();
+    }
 }

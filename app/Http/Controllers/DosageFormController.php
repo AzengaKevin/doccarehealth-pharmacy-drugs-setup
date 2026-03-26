@@ -55,4 +55,18 @@ class DosageFormController extends Controller
             return $this->sendErrorRedirect('Failed to update dosage form.', $throwable);
         }
     }
+
+    public function destroy(DosageForm $dosageForm)
+    {
+        try {
+
+            $this->dosageFormService->delete($dosageForm);
+
+            return $this->sendSuccessRedirect('Dosage form deleted successfully.', route('dosage-forms.index'));
+
+        } catch (\Throwable $throwable) {
+
+            return $this->sendErrorRedirect('Failed to delete dosage form.', $throwable);
+        }
+    }
 }
