@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDosageFormRequest;
+use App\Http\Responses\Concerns\RedirectWithFeedback;
 use App\Services\DosageFormService;
 use Illuminate\Http\Request;
 
 class DosageFormController extends Controller
 {
+    use RedirectWithFeedback;
+
     public function __construct(private readonly DosageFormService $dosageFormService) {}
 
     public function index(Request $request)
@@ -17,5 +21,20 @@ class DosageFormController extends Controller
             'forms' => $this->dosageFormService->get(...$params),
             'params' => $params,
         ]);
+    }
+
+    public function store(StoreDosageFormRequest $storeDosageFormRequest)
+    {
+        $data = $storeDosageFormRequest->validated();
+
+        try {
+
+            $this->dosageFormService->create($data);
+
+            return $this->sendSuccessRedirect('Dosage form created successfully.', route('dosage-forms.index'));
+        } catch (\Throwable $throwable) {
+
+            return $this->sendErrorRedirect('Failed to create dosage form.', $throwable);
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\DosageForm;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,6 +23,8 @@ class DosageFormControllerTest extends TestCase
 
     public function test_dosage_forms_index_route(): void
     {
+        DosageForm::factory()->count($howMany = 2)->create();
+
         $response = $this->actingAs($this->user)->get(route('dosage-forms.index'));
 
         $response->assertStatus(200);
@@ -29,7 +32,24 @@ class DosageFormControllerTest extends TestCase
         $response->assertInertia(
             fn ($page) => $page
                 ->component('dosage-forms/IndexPage')
-                ->has('forms.data', 0)
+                ->has('forms.data', $howMany)
         );
+    }
+
+    public function test_dosage_forms_store_route(): void
+    {
+        $payload = [
+            'name' => $this->faker->unique()->word(),
+        ];
+
+        $response = $this->actingAs($this->user)->post(route('dosage-forms.store'), $payload);
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect(route('dosage-forms.index'));
+
+        $this->assertDatabaseHas(DosageForm::class, [
+            'name' => data_get($payload, 'name'),
+        ]);
     }
 }

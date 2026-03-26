@@ -17,4 +17,13 @@ class DosageFormService
 
         return is_null($perPage) ? $dosageFormQuery->get() : $dosageFormQuery->paginate($perPage);
     }
+
+    public function create(array $data): DosageForm
+    {
+        $attributes = [
+            'name' => data_get($data, 'name'),
+        ];
+
+        return DosageForm::query()->create($attributes);
+    }
 }
