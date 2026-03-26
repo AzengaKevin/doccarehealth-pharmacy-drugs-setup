@@ -26,4 +26,13 @@ class DosageFormService
 
         return DosageForm::query()->create($attributes);
     }
+
+    public function update(DosageForm $dosageForm, array $data): bool
+    {
+        $attributes = [
+            'name' => data_get($data, 'name'),
+        ];
+
+        return $dosageForm->update($attributes);
+    }
 }

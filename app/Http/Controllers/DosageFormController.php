@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDosageFormRequest;
+use App\Http\Requests\UpdateDosageFormRequest;
 use App\Http\Responses\Concerns\RedirectWithFeedback;
+use App\Models\DosageForm;
 use App\Services\DosageFormService;
 use Illuminate\Http\Request;
 
@@ -35,6 +37,22 @@ class DosageFormController extends Controller
         } catch (\Throwable $throwable) {
 
             return $this->sendErrorRedirect('Failed to create dosage form.', $throwable);
+        }
+    }
+
+    public function update(UpdateDosageFormRequest $updateDosageFormRequest, DosageForm $dosageForm)
+    {
+        $data = $updateDosageFormRequest->validated();
+
+        try {
+
+            $this->dosageFormService->update($dosageForm, $data);
+
+            return $this->sendSuccessRedirect('Dosage form updated successfully.', route('dosage-forms.index'));
+
+        } catch (\Throwable $throwable) {
+
+            return $this->sendErrorRedirect('Failed to update dosage form.', $throwable);
         }
     }
 }

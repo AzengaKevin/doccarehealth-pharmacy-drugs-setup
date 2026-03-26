@@ -52,4 +52,24 @@ class DosageFormControllerTest extends TestCase
             'name' => data_get($payload, 'name'),
         ]);
     }
+
+    public function test_dosage_forms_update_route(): void
+    {
+        $form = DosageForm::factory()->create();
+
+        $payload = [
+            'name' => $this->faker->unique()->word(),
+        ];
+
+        $response = $this->actingAs($this->user)->put(route('dosage-forms.update', $form), $payload);
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect(route('dosage-forms.index'));
+
+        $this->assertDatabaseHas(DosageForm::class, [
+            'id' => $form->id,
+            'name' => data_get($payload, 'name'),
+        ]);
+    }
 }

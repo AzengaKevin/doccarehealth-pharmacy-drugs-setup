@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AddDosageFormSection from '@/pages/dosage-forms/AddDosageFormSection.vue';
+import EditDosageFormSection from '@/pages/dosage-forms/EditDosageFormSection.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { type Auth } from '@/types/auth';
@@ -279,4 +280,12 @@ watch(
             </div>
         </div>
     </AppLayout>
+
+    <teleport to="body">
+        <EditDosageFormSection
+            v-if="selectedDosageForm"
+            :dosage-form="selectedDosageForm"
+            v-model:open="editDosageFormDialogOpen"
+        />
+    </teleport>
 </template>
