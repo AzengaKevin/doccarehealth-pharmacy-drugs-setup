@@ -9,7 +9,7 @@ class DosageFormFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->randomElement(['Tablet', 'Capsule', 'Syrup', 'Injection']),
+            'name' => $this->faker->sentence(),
         ];
     }
 }
