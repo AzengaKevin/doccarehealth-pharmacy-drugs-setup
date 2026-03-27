@@ -81,7 +81,7 @@ class DrugControllerTest extends TestCase
         ]);
     }
 
-    public function test_drugs_show_routes(): void
+    public function test_drugs_show_route(): void
     {
         $drug = Drug::factory()->for(Manufacturer::factory())->for(DosageForm::factory())->create();
 
@@ -90,5 +90,51 @@ class DrugControllerTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertInertia(fn ($page) => $page->component('drugs/ShowPage')->has('drug'));
+    }
+
+    public function test_drugs_edit_route(): void
+    {
+        $drug = Drug::factory()->for(Manufacturer::factory())->for(DosageForm::factory())->create();
+
+        $response = $this->actingAs($this->user)->get(route('drugs.edit', $drug));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(fn ($page) => $page->component('drugs/EditPage')->has('drug')->has('forms')->has('manufacturers'));
+    }
+
+    public function test_drugs_update_route(): void
+    {
+        $drug = Drug::factory()->for(Manufacturer::factory())->for(DosageForm::factory())->create();
+
+        $dosageForm = DosageForm::factory()->create();
+
+        $manufacturer = Manufacturer::factory()->create();
+
+        $payload = [
+            'generic_name' => $this->faker->sentence(),
+            'brand_name' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
+            'strength' => $this->faker->randomElement(['10mg', '20mg', '50mg', '100mg', '250mg', '500mg', '1g']),
+            'unit_of_measure' => $this->faker->randomElement(['tablet', 'capsule', 'syrup', 'injection']),
+            'dosage_form' => $dosageForm->id,
+            'manufacturer' => $manufacturer->id,
+        ];
+
+        $response = $this->actingAs($this->user)->put(route('drugs.update', $drug), $payload);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas(Drug::class, [
+            'id' => $drug->id,
+            'generic_name' => data_get($payload, 'generic_name'),
+            'brand_name' => data_get($payload, 'brand_name'),
+            'description' => data_get($payload, 'description'),
+            'strength' => data_get($payload, 'strength'),
+            'unit_of_measure' => data_get($payload, 'unit_of_measure'),
+            'dosage_form_id' => data_get($payload, 'dosage_form'),
+            'manufacturer_id' => data_get($payload, 'manufacturer'),
+        ]);
+
     }
 }

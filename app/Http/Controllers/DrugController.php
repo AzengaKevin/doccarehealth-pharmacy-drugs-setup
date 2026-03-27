@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDrugRequest;
+use App\Http\Requests\UpdateDrugRequest;
 use App\Http\Responses\Concerns\RedirectWithFeedback;
 use App\Models\Drug;
 use App\Services\DosageFormService;
@@ -69,5 +70,38 @@ class DrugController extends Controller
         return Inertia::render('drugs/ShowPage', [
             'drug' => $drug,
         ]);
+    }
+
+    public function edit(Drug $drug)
+    {
+        return Inertia::render('drugs/EditPage', [
+            'drug' => $drug,
+            'forms' => $this->dosageFormService->get(perPage: null),
+            'manufacturers' => $this->manufacturerService->get(perPage: null),
+        ]);
+    }
+
+    public function update(UpdateDrugRequest $updateDrugRequest, Drug $drug)
+    {
+        $data = $updateDrugRequest->validated();
+
+        try {
+
+            $data['dosage_form_id'] = data_get($data, 'dosage_form');
+
+            $data['manufacturer_id'] = data_get($data, 'manufacturer');
+
+            $data['is_prescription_required'] = $updateDrugRequest->boolean('is_prescription_required');
+
+            $data['is_controlled_substance'] = $updateDrugRequest->boolean('is_controlled_substance');
+
+            $this->drugService->update($drug, $data);
+
+            return $this->sendSuccessRedirect("You've successfully updated the drug, {$drug->name}", route('drugs.show', $drug));
+
+        } catch (\Throwable $throwable) {
+
+            return $this->sendErrorRedirect('Failed to update the drug', $throwable);
+        }
     }
 }
