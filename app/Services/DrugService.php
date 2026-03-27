@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enum\DrugStatus;
 use App\Models\Drug;
 
 class DrugService
@@ -10,11 +9,20 @@ class DrugService
     public function get(
         ?string $query = null,
         ?int $perPage = 48,
+        ?int $limit = null,
+        ?array $with = null,
+        ?array $withCount = null,
         ?string $sortBy = 'created_at',
         ?string $sortDirection = 'desc'
     ) {
 
-        $drugQuery = Drug::search($query)->orderBy($sortBy, $sortDirection);
+        $drugQuery = Drug::search($query, function ($query) use ($limit, $with, $withCount) {
+
+            $query->when($limit, fn ($q) => $q->limit($limit))
+                ->when($withCount, fn ($q) => $q->withCount($withCount))
+                ->when($with, fn ($q) => $q->with($with));
+
+        })->orderBy($sortBy, $sortDirection);
 
         return is_null($perPage)
             ? $drugQuery->get()

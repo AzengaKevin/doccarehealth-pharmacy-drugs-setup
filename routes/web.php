@@ -24,6 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/drugs', [DrugController::class, 'index'])->name('drugs.index');
     Route::get('/drugs/create', [DrugController::class, 'create'])->name('drugs.create');
+    Route::get('/drugs/export', [DrugController::class, 'export'])->name('drugs.exportDrugs');
+    Route::get('/drugs/import', [DrugController::class, 'import'])->name('drugs.importDrugs');
     Route::post('/drugs', [DrugController::class, 'store'])->name('drugs.store');
     Route::get('/drugs/{drug}', [DrugController::class, 'show'])->name('drugs.show');
     Route::get('/drugs/{drug}/edit', [DrugController::class, 'edit'])->name('drugs.edit');

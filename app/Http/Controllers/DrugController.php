@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DrugExport;
 use App\Http\Requests\StoreDrugRequest;
 use App\Http\Requests\UpdateDrugRequest;
 use App\Http\Responses\Concerns\RedirectWithFeedback;
@@ -98,7 +99,6 @@ class DrugController extends Controller
             $this->drugService->update($drug, $data);
 
             return $this->sendSuccessRedirect("You've successfully updated the drug, {$drug->name}", route('drugs.show', $drug));
-
         } catch (\Throwable $throwable) {
 
             return $this->sendErrorRedirect('Failed to update the drug', $throwable);
@@ -112,10 +112,25 @@ class DrugController extends Controller
             $this->drugService->delete($drug);
 
             return $this->sendSuccessRedirect("You've successfully deleted the drug, {$drug->name}", route('drugs.index'));
-
         } catch (\Throwable $throwable) {
 
             return $this->sendErrorRedirect('Failed to delete the drug', $throwable);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $params = $request->only('query', 'perPage', 'sortBy', 'sortDirectiton');
+
+        $loanExport = new DrugExport(...$params);
+
+        $filename = Drug::getExportFilename();
+
+        return $loanExport->download($filename);
+    }
+
+    public function import()
+    {
+        
     }
 }

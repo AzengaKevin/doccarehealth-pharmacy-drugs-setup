@@ -27,11 +27,13 @@ import {
     show as drugsShow,
     edit as drugsEdit,
     create as drugsCreate,
+    exportDrugs as drugsExport,
 } from '@/routes/drugs';
 import debounce from 'lodash/debounce';
 import useDates from '@/composables/useDates';
 import {
     ChevronsUpDown,
+    Download,
     EllipsisVertical,
     Eye,
     FilterX,
@@ -42,6 +44,7 @@ import {
 } from 'lucide-vue-next';
 import { reactive, ref, watch } from 'vue';
 import useDrugs from '@/composables/useDrugs';
+import ImportDrugsSection from '@/pages/drugs/ImportDrugsSection.vue';
 
 type DrugsIndexPageProps = {
     auth: Auth;
@@ -145,6 +148,16 @@ watch(
                     <Button :as="Link" :href="drugsCreate().url">
                         <Plus class="h-4 w-4" />
                         Add New Drug
+                    </Button>
+
+                    <ImportDrugsSection />
+
+                    <Button
+                        as="a"
+                        class="w-fit"
+                        :href="drugsExport({ query: { ...filters } }).url"
+                    >
+                        <Download class="h-4 w-4" /> Export Drugs
                     </Button>
                 </div>
             </div>

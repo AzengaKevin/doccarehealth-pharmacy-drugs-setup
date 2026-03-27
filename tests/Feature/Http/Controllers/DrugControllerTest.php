@@ -8,6 +8,7 @@ use App\Models\Manufacturer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
 class DrugControllerTest extends TestCase
@@ -147,5 +148,18 @@ class DrugControllerTest extends TestCase
         $response->assertRedirect();
 
         $this->assertSoftDeleted($drug);
+    }
+
+    public function test_drugs_export_route(): void
+    {
+        Excel::fake();
+
+        Drug::factory()->count(2)->for(Manufacturer::factory())->for(DosageForm::factory())->create();
+
+        $response = $this->actingAs($this->user)->get(route('drugs.exportDrugs'));
+
+        $response->assertSessionHasNoErrors();
+
+        Excel::assertDownloaded(Drug::getExportFilename());
     }
 }

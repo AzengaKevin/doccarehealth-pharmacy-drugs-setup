@@ -74,7 +74,7 @@ class Drug extends Model
     protected function casts()
     {
         return [
-            'active' => DrugStatus::class,
+            'status' => DrugStatus::class,
         ];
     }
 
@@ -91,5 +91,14 @@ class Drug extends Model
     public function toSearchableArray()
     {
         return $this->only($this->fillable);
+    }
+
+    public static function getExportFilename(string $extension = 'xlsx'): string
+    {
+        return str('loan-')
+            ->append(now()->format('Ymd-Hi'))
+            ->append('.')
+            ->append($extension)
+            ->value();
     }
 }
