@@ -78,4 +78,9 @@ class DrugService
 
         return $drug->update($attributes);
     }
+
+    public function delete(Drug $drug): ?bool
+    {
+        return $drug->delete();
+    }
 }

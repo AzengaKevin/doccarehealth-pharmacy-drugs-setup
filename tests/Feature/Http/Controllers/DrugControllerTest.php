@@ -135,6 +135,17 @@ class DrugControllerTest extends TestCase
             'dosage_form_id' => data_get($payload, 'dosage_form'),
             'manufacturer_id' => data_get($payload, 'manufacturer'),
         ]);
+    }
 
+    public function test_drugs_destroy_route(): void
+    {
+
+        $drug = Drug::factory()->for(Manufacturer::factory())->for(DosageForm::factory())->create();
+
+        $response = $this->actingAs($this->user)->delete(route('drugs.destroy', $drug));
+
+        $response->assertRedirect();
+
+        $this->assertSoftDeleted($drug);
     }
 }

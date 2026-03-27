@@ -104,4 +104,18 @@ class DrugController extends Controller
             return $this->sendErrorRedirect('Failed to update the drug', $throwable);
         }
     }
+
+    public function destroy(Drug $drug)
+    {
+        try {
+
+            $this->drugService->delete($drug);
+
+            return $this->sendSuccessRedirect("You've successfully deleted the drug, {$drug->name}", route('drugs.index'));
+
+        } catch (\Throwable $throwable) {
+
+            return $this->sendErrorRedirect('Failed to delete the drug', $throwable);
+        }
+    }
 }

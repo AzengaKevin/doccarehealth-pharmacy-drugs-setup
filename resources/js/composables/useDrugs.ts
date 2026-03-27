@@ -6,7 +6,7 @@ export default function useDrugs() {
     const deleteDrug = (drug: Drug) => {
         if (
             confirm(
-                `Are you sure you want to delete the drug "${drug.name}"? This action cannot be undone.`,
+                `Are you sure you want to delete the drug "${drug.brand_name}"? This action cannot be undone.`,
             )
         ) {
             router.delete(drugsDestroy(drug.id).url, {
