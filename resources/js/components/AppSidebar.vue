@@ -6,6 +6,7 @@ import {
     LayoutGrid,
     Tablets,
     Factory,
+    Pill,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -23,6 +24,7 @@ import {
 import { dashboard } from '@/routes';
 import { index as dosageFormsIndex } from '@/routes/dosage-forms';
 import { index as manufacturerIndex } from '@/routes/manufacturers';
+import { index as drugsIndex } from '@/routes/drugs';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -40,6 +42,11 @@ const mainNavItems: NavItem[] = [
         title: 'Manufacturers',
         href: manufacturerIndex(),
         icon: Factory,
+    },
+    {
+        title: 'Drugs',
+        href: drugsIndex(),
+        icon: Pill,
     },
 ];
 

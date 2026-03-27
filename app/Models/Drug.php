@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 #[Fillable([
     'generic_name',
@@ -33,7 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Drug extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, Searchable, SoftDeletes;
 
     protected static function boot()
     {
@@ -72,7 +74,31 @@ class Drug extends Model
     protected function casts()
     {
         return [
-            'active' => DrugStatus::class,
+            'status' => DrugStatus::class,
         ];
+    }
+
+    public function manufacturer(): BelongsTo
+    {
+        return $this->belongsTo(Manufacturer::class);
+    }
+
+    public function dosageForm(): BelongsTo
+    {
+        return $this->belongsTo(DosageForm::class);
+    }
+
+    public function toSearchableArray()
+    {
+        return $this->only($this->fillable);
+    }
+
+    public static function getExportFilename(string $extension = 'xlsx'): string
+    {
+        return str('loan-')
+            ->append(now()->format('Ymd-Hi'))
+            ->append('.')
+            ->append($extension)
+            ->value();
     }
 }
