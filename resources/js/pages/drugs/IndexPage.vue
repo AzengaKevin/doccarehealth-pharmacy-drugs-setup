@@ -24,6 +24,7 @@ import type { LaravelPaginator } from '@/types/pagination';
 import { Head, Link, router } from '@inertiajs/vue3';
 import {
     index as drugsIndex,
+    show as drugsShow,
     edit as drugsEdit,
     create as drugsCreate,
 } from '@/routes/drugs';
@@ -32,6 +33,7 @@ import useDates from '@/composables/useDates';
 import {
     ChevronsUpDown,
     EllipsisVertical,
+    Eye,
     FilterX,
     Pencil,
     Plus,
@@ -250,6 +252,18 @@ watch(
                                             align="end"
                                             class="w-56"
                                         >
+                                            <DropdownMenuItem
+                                                value="Show"
+                                                class="group text-grass11 data-disabled:text-mauve8 data-highlighted:bg-green9 data-highlighted:text-green1 relative flex items-center rounded-[3px] p-2 leading-none outline-none select-none data-disabled:pointer-events-none"
+                                                @select="
+                                                    router.visit(
+                                                        drugsShow(drug.id).url,
+                                                    )
+                                                "
+                                            >
+                                                <Eye class="h-3 w-3" />
+                                                Show
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 value="Edit"
                                                 class="group text-grass11 data-disabled:text-mauve8 data-highlighted:bg-green9 data-highlighted:text-green1 relative flex items-center rounded-[3px] p-2 leading-none outline-none select-none data-disabled:pointer-events-none"

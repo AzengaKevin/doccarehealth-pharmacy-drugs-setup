@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDrugRequest;
 use App\Http\Responses\Concerns\RedirectWithFeedback;
+use App\Models\Drug;
 use App\Services\DosageFormService;
 use App\Services\DrugService;
 use App\Services\ManufacturerService;
@@ -61,5 +62,12 @@ class DrugController extends Controller
 
             return $this->sendErrorRedirect('Failed to create the drug', $throwable);
         }
+    }
+
+    public function show(Drug $drug)
+    {
+        return Inertia::render('drugs/ShowPage', [
+            'drug' => $drug,
+        ]);
     }
 }

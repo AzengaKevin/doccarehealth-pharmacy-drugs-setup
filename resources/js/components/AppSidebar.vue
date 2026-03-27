@@ -44,7 +44,7 @@ const mainNavItems: NavItem[] = [
         icon: Factory,
     },
     {
-        title: 'Pills',
+        title: 'Drugs',
         href: drugsIndex(),
         icon: Pill,
     },

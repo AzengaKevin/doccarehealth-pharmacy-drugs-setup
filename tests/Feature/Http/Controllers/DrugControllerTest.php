@@ -80,4 +80,15 @@ class DrugControllerTest extends TestCase
             'manufacturer_id' => data_get($payload, 'manufacturer'),
         ]);
     }
+
+    public function test_drugs_show_routes(): void
+    {
+        $drug = Drug::factory()->for(Manufacturer::factory())->for(DosageForm::factory())->create();
+
+        $response = $this->actingAs($this->user)->get(route('drugs.show', $drug));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(fn ($page) => $page->component('drugs/ShowPage')->has('drug'));
+    }
 }
