@@ -8,6 +8,7 @@ use App\Models\Manufacturer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
@@ -161,5 +162,18 @@ class DrugControllerTest extends TestCase
         $response->assertSessionHasNoErrors();
 
         Excel::assertDownloaded(Drug::getExportFilename());
+    }
+
+    public function test_drugs_import_route(): void
+    {
+        Excel::fake();
+
+        $file = UploadedFile::fake()->create('drugs.xlsx');
+
+        $response = $this->actingAs($this->user)->post(route('drugs.importDrugs'), [
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHasNoErrors();
     }
 }

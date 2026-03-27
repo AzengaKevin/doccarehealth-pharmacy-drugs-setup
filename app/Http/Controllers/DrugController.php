@@ -3,19 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DrugExport;
+use App\Http\Requests\ImportRequest;
 use App\Http\Requests\StoreDrugRequest;
 use App\Http\Requests\UpdateDrugRequest;
 use App\Http\Responses\Concerns\RedirectWithFeedback;
+use App\Imports\DrugImport;
 use App\Models\Drug;
 use App\Services\DosageFormService;
 use App\Services\DrugService;
+use App\Services\ImportService;
 use App\Services\ManufacturerService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DrugController extends Controller
 {
-    use RedirectWithFeedback;
+    use ImportService, RedirectWithFeedback;
 
     public function __construct(
         private readonly DrugService $drugService,
@@ -129,8 +133,19 @@ class DrugController extends Controller
         return $loanExport->download($filename);
     }
 
-    public function import()
+    public function import(ImportRequest $importRequest): RedirectResponse
     {
-        
+        $data = $importRequest->validated();
+
+        try {
+
+            $this->robustImport(new DrugImport, $data['file'], 'drugs', 'drugs');
+
+            return $this->sendSuccessRedirect('Imported drugs successfully.', route('drugs.index'));
+
+        } catch (\Throwable $throwable) {
+
+            return $this->sendErrorRedirect('Failed to import drugs data', $throwable);
+        }
     }
 }
