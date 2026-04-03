@@ -124,13 +124,13 @@ class DrugController extends Controller
 
     public function export(Request $request)
     {
-        $params = $request->only('query', 'perPage', 'sortBy', 'sortDirectiton');
+        $params = $request->only('perPage', 'sortBy', 'sortDirectiton');
 
-        $loanExport = new DrugExport(...$params);
+        $drugExport = new DrugExport(...$params);
 
         $filename = Drug::getExportFilename();
 
-        return $loanExport->download($filename);
+        return $drugExport->download($filename);
     }
 
     public function import(ImportRequest $importRequest): RedirectResponse

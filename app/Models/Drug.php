@@ -95,8 +95,8 @@ class Drug extends Model
 
     public static function getExportFilename(string $extension = 'xlsx'): string
     {
-        return str('loan-')
-            ->append(now()->format('Ymd-Hi'))
+        return str('drugs-')
+            ->append(now()->format('Y-m-d-Hi'))
             ->append('.')
             ->append($extension)
             ->value();
